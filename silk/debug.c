@@ -29,8 +29,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "config.h"
 #endif
 
-typedef int prevent_empty_translation_unit_warning;
-
 #include "debug.h"
 
 #if SILK_DEBUG || SILK_TIC_TOC

@@ -45,7 +45,7 @@ static opus_int32 LPC_inverse_pred_gain_QA_c(               /* O   Returns inver
 )
 {
     opus_int   k, n, mult2Q;
-    opus_int32 invGain_Q30, rc_Q31, rc_mult1_Q30, rc_mult2, tmp1, tmp2;
+    opus_int32 invGain_Q30, rc_Q31, rc_mult1_Q30, rc_mult2, tmp1, tmp2, tmp3;
 
     invGain_Q30 = SILK_FIX_CONST( 1, 30 );
     for( k = order - 1; k > 0; k-- ) {
@@ -80,14 +80,14 @@ static opus_int32 LPC_inverse_pred_gain_QA_c(               /* O   Returns inver
             opus_int64 tmp64;
             tmp1 = A_QA[ n ];
             tmp2 = A_QA[ k - n - 1 ];
-            tmp64 = silk_RSHIFT_ROUND64( silk_SMULL( silk_SUB_SAT32(tmp1,
-                  MUL32_FRAC_Q( tmp2, rc_Q31, 31 ) ), rc_mult2 ), mult2Q);
+            tmp3 = silk_SUB_SAT32(tmp1, MUL32_FRAC_Q( tmp2, rc_Q31, 31 ) );
+            tmp64 = silk_RSHIFT_ROUND64( silk_SMULL(tmp3, rc_mult2 ), mult2Q);
             if( tmp64 > silk_int32_MAX || tmp64 < silk_int32_MIN ) {
                return 0;
             }
             A_QA[ n ] = ( opus_int32 )tmp64;
-            tmp64 = silk_RSHIFT_ROUND64( silk_SMULL( silk_SUB_SAT32(tmp2,
-                  MUL32_FRAC_Q( tmp1, rc_Q31, 31 ) ), rc_mult2), mult2Q);
+            tmp3 = silk_SUB_SAT32(tmp2, MUL32_FRAC_Q( tmp1, rc_Q31, 31 ) );
+            tmp64 = silk_RSHIFT_ROUND64( silk_SMULL(tmp3, rc_mult2), mult2Q);
             if( tmp64 > silk_int32_MAX || tmp64 < silk_int32_MIN ) {
                return 0;
             }
